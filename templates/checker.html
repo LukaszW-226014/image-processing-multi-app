@@ -37,7 +37,14 @@
         <div class="container">
           <h1 class="display-4">Upload a mole photo and know what is it!</h1>
           <p>Photo should be clear and sharp. The mole should be in centre of a photo. (Acceptable extension: .jpg)</p>
-          <p><a class="btn btn-primary btn-lg" href="#" role="button">Learn more »</a></p>
+            <form method="POST" enctype="multipart/form-data">
+              {{ form.hidden_tag() }}
+              {{ form.photo }}
+              {% for error in form.photo.errors %}
+                <span style="color: red;">{{ error }}</span>
+              {% endfor %}
+              {{ form.submit }}
+            </form>
         </div>
       </div>
 
@@ -49,14 +56,7 @@
 
         <div class="container">
           <div class="row">
-            <form method="POST" enctype="multipart/form-data">
-              {{ form.hidden_tag() }}
-              {{ form.photo }}
-              {% for error in form.photo.errors %}
-                <span style="color: red;">{{ error }}</span>
-              {% endfor %}
-              {{ form.submit }}
-            </form>
+            <br>
           </div>
             <div class="row">
             {% if file_url %}
@@ -78,8 +78,15 @@
                               <img src="{{url_for('static', filename='histograms/histogram1.png')}}" width="100%" />
                           </div>
                           <div class="col-md-4">
-                              <h2 align="center">Heading</h2>
-                              <p>Available soon</p>
+                              <h2 align="center">Probability</h2>
+                              <br>
+                              <br>
+                              <br>
+                              {% if cancer < 50 %}
+                              <p align="center"><font color="#006400" size="6">Cancer: {{cancer}}%</font></p>
+                              {% else %}
+                              <p align="center"><font color="#990000" size="6">Cancer: {{cancer}}%</font></p>
+                              {% endif %}
                               <p><a class="btn btn-secondary" href="#" role="button">View details »</a></p>
                           </div>
                       </div>
@@ -88,6 +95,7 @@
               </div>
           </div> <!-- /container -->
         </div>
+
     </main>
 
     <footer class="container">
