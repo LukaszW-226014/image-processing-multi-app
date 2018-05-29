@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Melanoma Checker</title>
+    <link rel="shortcut icon" href="{{url_for('static', filename='icon.jpg')}}" type="image/x-icon" />
+    <link href="http://getbootstrap.com/docs/4.1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="http://getbootstrap.com/docs/4.1/examples/jumbotron/jumbotron.css" rel="stylesheet">
+</head>
+<body>
+    <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
+      <a class="navbar-brand" href="/">Melanoma Checker</a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarsExampleDefault">
+        <ul class="navbar-nav mr-auto">
+          <li class="nav-item">
+            <a class="nav-link" href="about">About</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="checker">Check now!</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link disabled" href="#">Available soon</a>
+          </li>
+        </ul>
+        <form class="form-inline my-2 my-lg-0">
+          <input class="form-control mr-sm-2" type="text" placeholder="Search" aria-label="Search">
+          <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+        </form>
+      </div>
+    </nav>
+
+    <main role="main">
+      <!-- Main jumbotron for a primary marketing message or call to action -->
+      <div class="jumbotron">
+        <div class="container">
+          <h1 class="display-3">What is melanoma?</h1>
+          <p align="justify">Melanoma is usually, but not always, a cancer of the skin. It begins in melanocytes – the cells that produce the pigment melanin that colors the skin,
+            hair and eyes. Melanocytes also form moles, where melanoma often develops. Having moles can be a risk factor for melanoma, but it’s important to remember that most moles do not become melanoma.</p>
+          <p><a class="btn btn-primary btn-lg" href="about" role="button">Learn more »</a></p>
+        </div>
+      </div>
+
+      <div class="container">
+        <img src="{{url_for('static', filename='dna4.jpg')}}" width="100%" />
+      </div>
+
+      <div class="container">
+        <!-- Example row of columns -->
+        <div class="row">
+          <div class="col-md-4">
+            <h1><font color="#2f4f4f">Check yourself</font></h1>
+            <p align="justify"><font size="4">If you have moles still not identify by a doctor.
+              You can check your mole. You can immediately know that is probably cancer or not.
+              You only click button below adn everything will be clear.</font></p>
+            <p><a class="btn btn-secondary" href="checker" role="button">Go to checker! »</a></p>
+          </div>
+          <div class="col-md-8">
+            <h1 align="center">Examples</h1>
+            <div class="row">
+              <div class="col-md-6">
+                <h3 align="center"><font color="#006400">Not cancer</font></h3>
+                <img src="{{url_for('static', filename='moleNotCancer.jpg')}}" width="100%" />
+              </div>
+              <div class="col-md-6">
+                <h3 align="center"><font color="#990000">Cancer</font></h3>
+                <img src="{{url_for('static', filename='melanomaCancer.jpg')}}" width="100%" />
+              </div>
+            </div>
+          </div>
+          </div>
+
+        </div>
+
+        <hr>
+
+      </div> <!-- /container -->
+
+    </main>
+
+    <footer class="container">
+      <p>© Łukasz Wójcik 2018 - CPSiO</p>
+    </footer>
+</body>
+</html>
