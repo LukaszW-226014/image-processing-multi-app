@@ -3,8 +3,8 @@
 <head>
     <title>Melanoma Checker - About</title>
     <link rel="shortcut icon" href="{{url_for('static', filename='icon.jpg')}}" type="image/x-icon" />
-    <link href="http://getbootstrap.com/docs/4.1/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="http://getbootstrap.com/docs/4.1/examples/jumbotron/jumbotron.css" rel="stylesheet">
+    <link href="static/css/bootstrap.min.css" rel="stylesheet">
+    <link href="static/css/jumbotron.css" rel="stylesheet">
 </head>
 <body>
     <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
@@ -32,13 +32,84 @@
       <!-- Main jumbotron for a primary marketing message or call to action -->
       <div class="jumbotron">
         <div class="container">
-          <h1 class="display-3">Hello, world!</h1>
-          <p>This is a template for a simple marketing or informational website. It includes a large callout called a jumbotron and three supporting pieces of content. Use it as a starting point to create something more unique.</p>
-          <p><a class="btn btn-primary btn-lg" href="#" role="button">Learn more »</a></p>
+            <div class="row">
+                <div class="col-md-8">
+                    <h1 class="display-3">Melanoma</h1>
+                    <p align="justify">The most dangerous form of skin cancer, these cancerous growths develop when unrepaired DNA damage to skin cells
+                        (most often caused by ultraviolet radiation from sunshine or tanning beds) triggers mutations (genetic defects) that lead the skin cells to multiply rapidly and form malignant tumors.
+                         These tumors originate in the pigment-producing melanocytes in the basal layer of the epidermis.
+                         Melanomas often resemble moles; some develop from moles.
+                        The majority of melanomas are black or brown, but they can also be skin-colored, pink, red, purple, blue or white.
+                        Melanoma is caused mainly by intense, occasional UV exposure (frequently leading to sunburn), especially in those who are genetically predisposed to the disease.
+                        Melanoma kills an estimated 10,130 people in the US annually.</p>
+                    <p><a class="btn btn-primary btn-lg" href="checker" role="button">Check yourself now! »</a></p>
+                </div>
+                <div class="col-md-4">
+                    <br>
+                    <br>
+                    <br>
+                    <br>
+                    <img src="{{url_for('static', filename='melanoma2.jpg')}}" width="100%" align="middle"/>
+                </div>
+            </div>
         </div>
       </div>
 
-      </div> <!-- /container -->
+      <div class="container">
+          <div class="row">
+              <h1>Recognition</h1>
+              <p align="justify">If melanoma is recognized and treated early, it is almost always curable, but if it is not,
+                  the cancer can advance and spread to other parts of the body, where it becomes hard to treat and can be fatal.
+                  While it is not the most common of the skin cancers, it causes the most deaths.
+                  In 2016, an estimated 76,380 of these will be invasive melanomas, with about 46,870 in males and 29,510 in women.</p>
+              <br>
+          </div>
+      </div>
+
+      <div class="jumbotron">
+          <div class="container">
+              <div class="row">
+                  <h1>Warning signs: The ABCDEs of Melanoma</h1>
+                  <p align="justify">Moles, brown spots and growths on the skin are usually harmless — but not always.
+                      Anyone who has more than 100 moles is at greater risk for melanoma. The first signs
+                      can appear in one or more atypical moles. That's why it's so important to get to know your
+                      skin very well and to recognize any changes in the moles on your body. Look for the ABCDE signs of melanoma,
+                      and if you see one or more, make an appointment with a physician immediately.</p>
+              </div>
+          </div>
+      </div>
+
+      <div class="container">
+          <div class="row">
+              <h2>A - Asymmetry</h2>
+              <p align="justify">The benign mole, left, is not asymmetrical. If you draw a line through the middle, the two sides will match, meaning it is symmetrical. If you draw a line through the mole on the right, the two halves will not match, meaning it is asymmetrical, a warning sign for melanoma.</p>
+          </div>
+          <div class="row">
+              <h2 align="center">B - Border</h2>
+              <p align="justify">A benign mole has smooth, even borders, unlike melanomas. The borders of an early melanoma tend to be uneven. The edges may be scalloped or notched.</p>
+          </div>
+          <div class="row">
+              <h2 align="center">C - Color</h2>
+              <p align="justify">Most benign moles are all one color — often a single shade of brown. Having a variety of colors is another warning signal. A number of different shades of brown, tan or black could appear. A melanoma may also become red, white or blue.</p>
+          </div>
+
+          <div class="row">
+              <h2 align="center">D - Diameter</h2>
+              <p align="justify">Benign moles usually have a smaller diameter than malignant ones. Melanomas usually are larger in diameter than the eraser on your pencil tip (¼ inch or 6mm), but they may sometimes be smaller when first detected.</p>
+          </div>
+          <div class="row">
+              <h2 align="center">E - Evolving</h2>
+              <p align="justify">Common, benign moles look the same over time. Be on the alert when a mole starts to evolve or change in any way. When a mole is evolving, see a doctor. Any change — in size, shape, color, elevation, or another trait, or any new symptom such as bleeding, itching or crusting — points to danger.</p>
+          </div>
+      </div>
+        <div class="container">
+          <div class="row">
+            <br>
+            <br>
+            <br>
+            <br>
+          </div>
+        </div>
     </main>
 
     <footer class="container">
