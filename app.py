@@ -7,8 +7,10 @@ from flask_wtf import FlaskForm
 from flask_wtf.file import FileField, FileRequired, FileAllowed
 from wtforms import SubmitField
 import cv2
+import matplotlib
+matplotlib.use('Agg')
 import matplotlib.pyplot as plt
-plt.use('Agg')
+
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'I have a dream'
