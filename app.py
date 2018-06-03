@@ -8,6 +8,7 @@ from flask_wtf.file import FileField, FileRequired, FileAllowed
 from wtforms import SubmitField
 import cv2
 import matplotlib.pyplot as plt
+plt.use('Agg')
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'I have a dream'
@@ -47,7 +48,7 @@ def checker_page():
         cancer = image_processing(filename)
     else:
         file_url = None
-    return render_template('checker.html', form=form, file_url=file_url, cancer = cancer)
+    return render_template('checker.html', form=form, file_url=file_url, cancer=cancer)
 
 
 def image_processing(file):
