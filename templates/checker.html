@@ -70,17 +70,44 @@
                       </div>
                       <div class="row">
                           <div class="col-md-4">
-                              <h2 align="center">Image</h2>
+                              <h3 align="center">Upload image</h3>
                               <img src="{{ file_url }}" width="100%">
                           </div>
                           <div class="col-md-4">
-                              <h2 align="center">Histogram</h2>
-                              <img src="{{url_for('static', filename='histograms/histogram1.png')}}" width="100%" />
+                              <h3 align="center">Step 1: Grayscale convert</h3>
+                              <img src="{{url_for('static', filename='histograms/0Started' + random_value + '.jpg')}}" width="100%" />
                           </div>
                           <div class="col-md-4">
+                              <h3 align="center">Step 2: Gausian filter</h3>
+                              <img src="{{url_for('static', filename='histograms/1denoised' + random_value + '.jpg')}}" width="100%" />
+                          </div>
+                      </div>
+                      <div class="row">
+                          <div class="col-md-4">
+                              <h3 align="center">Step 3: Tresholding</h3>
+                              <img src="{{url_for('static', filename='histograms/2Tresh' + random_value + '.jpg')}}" width="100%" />
+                          </div>
+                          <div class="col-md-4">
+                              <h3 align="center">Step 4: Gausian filter</h3>
+                              <img src="{{url_for('static', filename='histograms/3denoisedThresh' + random_value + '.jpg')}}" width="100%" />
+                          </div>
+                          <div class="col-md-4">
+                              <h3 align="center">Step 5: Filled mole</h3>
+                              <img src="{{url_for('static', filename='histograms/6Out' + random_value + '.jpg')}}" width="100%" />
+                          </div>
+                      </div>
+                        <div class="row">
+                          <div class="col-md-6">
+                              <h3 align="center">Step 6: Detected edges</h3>
+                              <img src="{{url_for('static', filename='histograms/7detectedEdges' + random_value + '.jpg')}}" width="100%" />
+                          </div>
+                          <div class="col-md-6">
+                              <br>
+                              <br>
+                              <br>
+                              <br>
+                              <br>
                               <h2 align="center">Probability</h2>
-                              <br>
-                              <br>
                               <br>
                               {% if cancer < 50 %}
                               <p align="center"><font color="#006400" size="6">Cancer: {{cancer}}%</font></p>

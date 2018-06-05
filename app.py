@@ -14,6 +14,7 @@ import matplotlib.pyplot as plt
 
 
 app = Flask(__name__)
+app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 0
 app.config['SECRET_KEY'] = 'I have a dream'
 app.config['UPLOADED_PHOTOS_DEST'] = os.getcwd() + '/uploads'
 imagePath = os.getcwd() + '/uploads/'
@@ -29,6 +30,14 @@ class UploadForm(FlaskForm):
     photo = FileField(validators=[FileAllowed(photos, u'Image only!'), FileRequired(u'File was empty!')])
     submit = SubmitField(u'Upload')
 
+# No caching at all for API endpoints.
+@app.after_request
+def add_header(response):
+    # response.cache_control.no_store = True
+    response.headers['Cache-Control'] = 'no-store, no-cache, must-revalidate, post-check=0, pre-check=0, max-age=0'
+    response.headers['Pragma'] = 'no-cache'
+    response.headers['Expires'] = '-1'
+    return response
 
 @app.route('/')
 def home_page():
@@ -43,69 +52,42 @@ def about_page():
 @app.route('/checker', methods=['GET', 'POST'])
 def checker_page():
     cancer = 0
+    random_value = ""
     cleaning()
     form = UploadForm()
     if form.validate_on_submit():
         filename = photos.save(form.photo.data)
         file_url = photos.url(filename)
-        cancer = image_processing(filename)
+        random_value, cancer = image_processing(filename)
     else:
         file_url = None
-    return render_template('checker.html', form=form, file_url=file_url, cancer=cancer)
+    return render_template('checker.html', form=form, file_url=file_url, cancer=cancer, random_value=random_value)
 
 
 def image_processing(file):
+    # Step 1 read convert to grayscale image
     img = cv2.imread(imagePath + str(file), cv2.IMREAD_GRAYSCALE)
-    rows, cols = img.shape
 
-    fig = plt.hist(img.ravel(), 256, [0, 256])
-    # plt.show()
-    plt.savefig(histogramPath + "histogram1")
+    # Generate random value to refresh showing on page image
+    random_value = str(random.randrange(10, 100, 1))
+
+    # TODO counting real probability
     cancer = random.randrange(10.0, 100.0, 1)
-    non_cancer = 100.0 - cancer
-    cv2.imwrite(histogramPath + "before.jpg", img, [int(cv2.IMWRITE_JPEG_QUALITY), 95])
+
+    # Step 2: Gaussian filter
     denoised = cv2.GaussianBlur(img, (5, 5), 0)
-    filter_withoutDenoised = cv2.Laplacian(img, cv2.CV_64F)
-    filter = cv2.Laplacian(denoised, cv2.CV_64F)
-    filter_canny = cv2.Canny(denoised, 100, 200)
-    sobelx64 = cv2.Sobel(img, cv2.CV_64F, 1, 0, ksize=5)
-    sobely64 = cv2.Sobel(img, cv2.CV_64F, 0, 1, ksize=5)
 
-    #laplacian = np.uint8(np.absolute(filter))
-    #sobelx = np.uint8(np.absolute(sobelx64))
-    #sobely = np.uint8(np.absolute(sobely64))
-
+    #Step 3: Thresholding
     ret, thresh2 = cv2.threshold(denoised, 127, 255, cv2.THRESH_BINARY_INV)
 
     denoisedTresh = cv2.GaussianBlur(thresh2, (5, 5), 0)
 
-    img_tmp, contours, hierarchy = cv2.findContours(thresh2, 1, 2)
-
-    # cnt = contours[0]
-    # #M = cv2.moments(cnt)
-    # print(cnt)
-    # print(thresh2)
-    #
-    # (x, y), radius = cv2.minEnclosingCircle(cnt)
-    # center = (int(x), int(y))
-    # radius = int(radius)
-    # print("Center: " + str(center) + " Radius: " + str(radius))
-    # cv2.circle(thresh2, center, radius, (0, 255, 0), 20)
-
-    # filter_withoutDenoised2 = cv2.Laplacian(thresh2, cv2.CV_64F)
-    # filter2 = cv2.Laplacian(denoisedTresh, cv2.CV_64F)
-    # filter_canny2 = cv2.Canny(denoisedTresh, 100, 200)
-    # sobelx642 = cv2.Sobel(thresh2, cv2.CV_64F, 1, 0, ksize=5)
-    # sobely642 = cv2.Sobel(thresh2, cv2.CV_64F, 0, 1, ksize=5)
-
-
     flood_fill = denoisedTresh.copy()
-    # Mask used to flood filling.
-    # Notice the size needs to be 2 pixels than the image.
+
     h, w = denoisedTresh.shape[:2]
     mask = np.zeros((h + 2, w + 2), np.uint8)
 
-    # Floodfill from point (0, 0)
+    # Step 5: Floodfill from point (0, 0)
     cv2.floodFill(flood_fill, mask, (0, 0), 255);
 
     # Invert floodfilled image
@@ -114,42 +96,21 @@ def image_processing(file):
     # Combine the two images to get the foreground.
     filled_out = denoisedTresh | flood_fill_inv
 
-    filter_withoutDenoised2 = cv2.Laplacian(thresh2, cv2.CV_64F)
+    # Step 6: Detect edges - Laplacian
     filter2 = cv2.Laplacian(filled_out, cv2.CV_64F)
-    filter_canny2 = cv2.Canny(filled_out, 100, 200)
-    sobelx642 = cv2.Sobel(filled_out, cv2.CV_64F, 1, 0, ksize=5)
-    sobely642 = cv2.Sobel(filled_out, cv2.CV_64F, 0, 1, ksize=5)
 
+    #cv2.imwrite(histogramPath + "floodFill" + str(random_value) + ".jpg", flood_fill, [int(cv2.IMWRITE_JPEG_QUALITY), 95])
 
+    cv2.imwrite(histogramPath + "0Started" + str(random_value) + ".jpg", img, [int(cv2.IMWRITE_JPEG_QUALITY), 95])
+    cv2.imwrite(histogramPath + "1denoised" + str(random_value) + ".jpg", denoised, [int(cv2.IMWRITE_JPEG_QUALITY), 95])
+    cv2.imwrite(histogramPath + "2Tresh" + str(random_value) + ".jpg", thresh2, [int(cv2.IMWRITE_JPEG_QUALITY), 95])
+    cv2.imwrite(histogramPath + "3denoisedThresh" + str(random_value) + ".jpg", denoisedTresh, [int(cv2.IMWRITE_JPEG_QUALITY), 95])
+    cv2.imwrite(histogramPath + "4Mask" + str(random_value) + ".jpg", mask, [int(cv2.IMWRITE_JPEG_QUALITY), 95])
+    cv2.imwrite(histogramPath + "5invOut" + str(random_value) + ".jpg", flood_fill_inv, [int(cv2.IMWRITE_JPEG_QUALITY), 95])
+    cv2.imwrite(histogramPath + "6Out" + str(random_value) + ".jpg", filled_out, [int(cv2.IMWRITE_JPEG_QUALITY), 95])
+    cv2.imwrite(histogramPath + "7detectedEdges" + str(random_value) + ".jpg", filter2, [int(cv2.IMWRITE_JPEG_QUALITY), 95])
 
-    cv2.imwrite(histogramPath + "floodFill.jpg", flood_fill, [int(cv2.IMWRITE_JPEG_QUALITY), 95])
-    cv2.imwrite(histogramPath + "floodFill_invert.jpg", flood_fill_inv, [int(cv2.IMWRITE_JPEG_QUALITY), 95])
-    cv2.imwrite(histogramPath + "Out.jpg", filled_out, [int(cv2.IMWRITE_JPEG_QUALITY), 95])
-
-    cv2.imwrite(histogramPath + "Started.jpg", img, [int(cv2.IMWRITE_JPEG_QUALITY), 95])
-    cv2.imwrite(histogramPath + "denoised.jpg", denoised, [int(cv2.IMWRITE_JPEG_QUALITY), 95])
-    cv2.imwrite(histogramPath + "denoisedThresh.jpg", denoisedTresh, [int(cv2.IMWRITE_JPEG_QUALITY), 95])
-    cv2.imwrite(histogramPath + "detectedEdges(withoutDenoised).jpg", filter_withoutDenoised, [int(cv2.IMWRITE_JPEG_QUALITY), 95])
-    cv2.imwrite(histogramPath + "detectedEdges.jpg", filter, [int(cv2.IMWRITE_JPEG_QUALITY), 95])
-    cv2.imwrite(histogramPath + "detectedEdges(Canny).jpg", filter_canny, [int(cv2.IMWRITE_JPEG_QUALITY), 95])
-    cv2.imwrite(histogramPath + "sobelX.jpg", sobelx64, [int(cv2.IMWRITE_JPEG_QUALITY), 95])
-    cv2.imwrite(histogramPath + "sobelY.jpg", sobely64, [int(cv2.IMWRITE_JPEG_QUALITY), 95])
-    cv2.imwrite(histogramPath + "Tresh.jpg", thresh2, [int(cv2.IMWRITE_JPEG_QUALITY), 95])
-
-    cv2.imwrite(histogramPath + "detectedEdges(withoutDenoised)2.jpg", filter_withoutDenoised2, [int(cv2.IMWRITE_JPEG_QUALITY), 95])
-    cv2.imwrite(histogramPath + "detectedEdges2.jpg", filter2, [int(cv2.IMWRITE_JPEG_QUALITY), 95])
-    cv2.imwrite(histogramPath + "detectedEdges(Canny)2.jpg", filter_canny2, [int(cv2.IMWRITE_JPEG_QUALITY), 95])
-    cv2.imwrite(histogramPath + "sobelX2.jpg", sobelx642, [int(cv2.IMWRITE_JPEG_QUALITY), 95])
-    cv2.imwrite(histogramPath + "sobelY2.jpg", sobely642, [int(cv2.IMWRITE_JPEG_QUALITY), 95])
-    #cv2.imwrite(histogramPath + "Circle.jpg", img_circle, [int(cv2.IMWRITE_JPEG_QUALITY), 95])
-    #cv2.imwrite(histogramPath + "CircleTMP.jpg", contours, [int(cv2.IMWRITE_JPEG_QUALITY), 95])
-    #cv2.imshow('Orginal', img)
-    #cv2.imshow('Laplacian', filter)
-
-    #cv2.waitKey()
-    #cv2.destroyAllWindows()
-
-    return cancer
+    return random_value, cancer
 
 
 def cleaning():
