@@ -92,17 +92,17 @@ def image_processing(file):
     # print("Center: " + str(center) + " Radius: " + str(radius))
     # cv2.circle(thresh2, center, radius, (0, 255, 0), 20)
 
-    filter_withoutDenoised2 = cv2.Laplacian(thresh2, cv2.CV_64F)
-    filter2 = cv2.Laplacian(denoisedTresh, cv2.CV_64F)
-    filter_canny2 = cv2.Canny(denoisedTresh, 100, 200)
-    sobelx642 = cv2.Sobel(thresh2, cv2.CV_64F, 1, 0, ksize=5)
-    sobely642 = cv2.Sobel(thresh2, cv2.CV_64F, 0, 1, ksize=5)
+    # filter_withoutDenoised2 = cv2.Laplacian(thresh2, cv2.CV_64F)
+    # filter2 = cv2.Laplacian(denoisedTresh, cv2.CV_64F)
+    # filter_canny2 = cv2.Canny(denoisedTresh, 100, 200)
+    # sobelx642 = cv2.Sobel(thresh2, cv2.CV_64F, 1, 0, ksize=5)
+    # sobely642 = cv2.Sobel(thresh2, cv2.CV_64F, 0, 1, ksize=5)
 
 
-    flood_fill = thresh2.copy()
+    flood_fill = denoisedTresh.copy()
     # Mask used to flood filling.
     # Notice the size needs to be 2 pixels than the image.
-    h, w = thresh2.shape[:2]
+    h, w = denoisedTresh.shape[:2]
     mask = np.zeros((h + 2, w + 2), np.uint8)
 
     # Floodfill from point (0, 0)
@@ -112,7 +112,13 @@ def image_processing(file):
     flood_fill_inv = cv2.bitwise_not(flood_fill)
 
     # Combine the two images to get the foreground.
-    filled_out = thresh2 | flood_fill_inv
+    filled_out = denoisedTresh | flood_fill_inv
+
+    filter_withoutDenoised2 = cv2.Laplacian(thresh2, cv2.CV_64F)
+    filter2 = cv2.Laplacian(filled_out, cv2.CV_64F)
+    filter_canny2 = cv2.Canny(filled_out, 100, 200)
+    sobelx642 = cv2.Sobel(filled_out, cv2.CV_64F, 1, 0, ksize=5)
+    sobely642 = cv2.Sobel(filled_out, cv2.CV_64F, 0, 1, ksize=5)
 
 
 
