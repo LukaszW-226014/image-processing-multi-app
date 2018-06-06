@@ -88,7 +88,7 @@ def image_processing(file):
     mask = np.zeros((h + 2, w + 2), np.uint8)
 
     # Step 5: Floodfill from point (0, 0)
-    cv2.floodFill(flood_fill, mask, (0, 0), 255);
+    cv2.floodFill(flood_fill, mask, (0, 0), 255)
 
     # Invert floodfilled image
     flood_fill_inv = cv2.bitwise_not(flood_fill)
